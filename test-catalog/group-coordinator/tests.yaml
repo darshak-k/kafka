@@ -10,6 +10,8 @@ org.apache.kafka.coordinator.group.GroupConfigTest:
 - testValidShareAutoOffsetResetValues
 org.apache.kafka.coordinator.group.GroupCoordinatorConfigTest:
 - testConfigs
+- testConsumerGroupAssignorFullClassNames
+- testConsumerGroupAssignors
 - testInvalidConfigs
 org.apache.kafka.coordinator.group.GroupCoordinatorRecordHelpersTest:
 - testEmptyGroupMetadataRecord
@@ -36,12 +38,14 @@ org.apache.kafka.coordinator.group.GroupCoordinatorRecordHelpersTest:
 - testNewOffsetCommitRecordWithExpireTimestamp
 - testNewOffsetCommitTombstoneRecord
 - testNewShareGroupEpochTombstoneRecord
+- testOffsetCommitValueVersion
 org.apache.kafka.coordinator.group.GroupCoordinatorRecordSerdeTest:
 - testDeserialize
 - testDeserializeAllRecordTypes
 - testDeserializeWithInvalidKeyBytes
 - testDeserializeWithInvalidRecordType
 - testDeserializeWithInvalidValueBytes
+- testDeserializeWithInvalidValueVersion
 - testDeserializeWithKeyEmptyBuffer
 - testDeserializeWithTombstoneForValue
 - testDeserializeWithValueEmptyBuffer
@@ -70,10 +74,23 @@ org.apache.kafka.coordinator.group.GroupCoordinatorServiceTest:
 - testDeleteOffsetsInvalidGroupId
 - testDeleteOffsetsWhenNotStarted
 - testDeleteOffsetsWithException
+- testDeleteShareGroupCoordinatorGeneralWriteError
+- testDeleteShareGroupCoordinatorShareSpecificWriteError
+- testDeleteShareGroupNotEmptyError
+- testDeleteShareGroupPersisterError
+- testDeleteWithShareGroups
 - testDescribeGroupCoordinatorLoadInProgress
 - testDescribeGroups
 - testDescribeGroupsInvalidGroupId
 - testDescribeGroupsWhenNotStarted
+- testDescribeShareGroupOffsetsCoordinatorNotActive
+- testDescribeShareGroupOffsetsMetadataImageNull
+- testDescribeShareGroupOffsetsNonexistentTopicWithDefaultPersister
+- testDescribeShareGroupOffsetsWithDefaultPersister
+- testDescribeShareGroupOffsetsWithDefaultPersisterNullResult
+- testDescribeShareGroupOffsetsWithDefaultPersisterNullTopicData
+- testDescribeShareGroupOffsetsWithDefaultPersisterThrowsError
+- testDescribeShareGroupOffsetsWithNoOpPersister
 - testFetchOffsets
 - testFetchOffsetsWhenNotStarted
 - testFetchOffsetsWithWrappedError
@@ -109,6 +126,13 @@ org.apache.kafka.coordinator.group.GroupCoordinatorServiceTest:
 - testShareGroupHeartbeatWhenNotStarted
 - testShareGroupHeartbeatWithException
 - testStartupShutdown
+- testStreamsGroupDescribe
+- testStreamsGroupDescribeCoordinatorLoadInProgress
+- testStreamsGroupDescribeCoordinatorNotActive
+- testStreamsGroupDescribeInvalidGroupId
+- testStreamsGroupHeartbeat
+- testStreamsGroupHeartbeatWhenNotStarted
+- testStreamsGroupHeartbeatWithException
 - testSyncGroup
 - testSyncGroupInvalidGroupId
 - testSyncGroupWhenNotStarted
@@ -147,11 +171,27 @@ org.apache.kafka.coordinator.group.GroupCoordinatorShardTest:
 - testReplayShareGroupMemberMetadataWithNullValue
 - testReplayShareGroupMetadata
 - testReplayShareGroupMetadataWithNullValue
+- testReplayStreamsGroupCurrentMemberAssignment
+- testReplayStreamsGroupCurrentMemberAssignmentWithNullValue
+- testReplayStreamsGroupMemberMetadata
+- testReplayStreamsGroupMemberMetadataWithNullValue
+- testReplayStreamsGroupMetadata
+- testReplayStreamsGroupMetadataWithNullValue
+- testReplayStreamsGroupPartitionMetadata
+- testReplayStreamsGroupPartitionMetadataWithNullValue
+- testReplayStreamsGroupTargetAssignmentMember
+- testReplayStreamsGroupTargetAssignmentMemberKeyWithNullValue
+- testReplayStreamsGroupTargetAssignmentMetadata
+- testReplayStreamsGroupTargetAssignmentMetadataWithNullValue
+- testReplayStreamsGroupTopology
+- testReplayStreamsGroupTopologyWithNullValue
 - testReplayTransactionalOffsetCommit
-- testReplayWithUnsupportedVersion
-- testScheduleClassicGroupSizeCounter
 - testScheduleCleanupGroupMetadata
+- testScheduleGroupSizeCounter
 - testShareGroupHeartbeat
+- testSharePartitionDeleteRequests
+- testSharePartitionDeleteRequestsNonEmptyShareGroup
+- testStreamsGroupHeartbeat
 org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testClassicGroupCompletedRebalanceSensor
 - testClassicGroupDelete
@@ -205,6 +245,7 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testConsumerGroupMemberJoinRefreshesExpiredRegexes
 - testConsumerGroupMemberJoinsWithNewRegex
 - testConsumerGroupMemberJoinsWithRegexAndUpdatesItBeforeResolutionCompleted
+- testConsumerGroupMemberJoinsWithRegexWithTopicAuthorizationFailure
 - testConsumerGroupMemberJoinsWithUpdatedRegex
 - testConsumerGroupMemberPicksUpExistingResolvedRegularExpression
 - testConsumerGroupMemberUsingClassicProtocolBatchLeaveGroup
@@ -274,6 +315,7 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testJoiningConsumerGroupWithNewDynamicMember
 - testJoiningConsumerGroupWithNewStaticMember
 - testLastConsumerProtocolMemberLeavingConsumerGroup
+- testLastConsumerProtocolMemberLeavingConsumerGroupByAdminApi
 - testLastConsumerProtocolMemberRebalanceTimeoutInConsumerGroup
 - testLastConsumerProtocolMemberSessionTimeoutInConsumerGroup
 - testLastJoiningMembersAreKickedOutWhenRejoiningGroupWithMaxSize
@@ -297,12 +339,10 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testNewMemberTimeoutCompletion
 - testNoConversionWhenSizeExceedsClassicMaxGroupSize
 - testNoGroupEpochBumpWhenStaticMemberTemporarilyLeaves
-- testOnClassicGroupStateTransitionOnLoading
-- testOnConsumerGroupStateTransition
-- testOnConsumerGroupStateTransitionOnLoading
 - testOnLoaded
 - testOnLoadedExceedGroupMaxSizeTriggersRebalance
 - testOnLoadedSchedulesClassicGroupMemberHeartbeats
+- testOnLoadedWithStreamsGroup
 - testOnNewMetadataImage
 - testOnNewMetadataImageWithEmptyDelta
 - testPartitionAssignorExceptionOnRegularHeartbeat
@@ -338,6 +378,27 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testReplayConsumerGroupTargetAssignmentMetadata
 - testReplayConsumerGroupTargetAssignmentMetadataTombstone
 - testReplayGroupMetadataRecords
+- testReplayStreamsGroupCurrentMemberAssignment
+- testReplayStreamsGroupCurrentMemberAssignmentTombstoneExisting
+- testReplayStreamsGroupCurrentMemberAssignmentTombstoneNotExisting
+- testReplayStreamsGroupEpochTombstoneExisting
+- testReplayStreamsGroupEpochTombstoneNotExisting
+- testReplayStreamsGroupMemberMetadata
+- testReplayStreamsGroupMemberMetadataTombstoneExisting
+- testReplayStreamsGroupMemberMetadataTombstoneNotExisting
+- testReplayStreamsGroupMetadata
+- testReplayStreamsGroupPartitionMetadata
+- testReplayStreamsGroupPartitionMetadataTombstoneExisting
+- testReplayStreamsGroupPartitionMetadataTombstoneNotExisting
+- testReplayStreamsGroupTargetAssignmentMember
+- testReplayStreamsGroupTargetAssignmentMemberTombstoneExisting
+- testReplayStreamsGroupTargetAssignmentMemberTombstoneNonExisting
+- testReplayStreamsGroupTargetAssignmentMetadata
+- testReplayStreamsGroupTargetAssignmentMetadataTombstoneExisting
+- testReplayStreamsGroupTargetAssignmentMetadataTombstoneNotExisting
+- testReplayStreamsGroupTopology
+- testReplayStreamsGroupTopologyTombstoneExists
+- testReplayStreamsGroupTopologyTombstoneNotExists
 - testResetRebalanceDelayWhenNewMemberJoinsGroupDuringInitialRebalance
 - testResolvedRegularExpressionsRemovedWhenConsumerMembersRemovedByAdminApi
 - testResolvedRegularExpressionsRemovedWhenMembersLeaveOrFenced
@@ -359,6 +420,7 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testShareGroupStates
 - testShareGroupUnknownGroupId
 - testShareGroupUnknownMemberIdJoins
+- testSharePartitionDeleteRequest
 - testShouldThrowFencedInstanceIdExceptionWhenStaticMemberWithDifferentMemberIdJoins
 - testShouldThrowFencedInstanceIdExceptionWhenStaticMemberWithDifferentMemberIdLeaves
 - testShouldThrowUnknownMemberIdExceptionWhenUnknownStaticMemberLeaves
@@ -398,6 +460,9 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testStaticMembersLeaveUnknownGroup
 - testStaticMembersUnknownInstanceBatchLeaveGroup
 - testStaticMembersValidBatchLeaveGroup
+- testStreamsGroupDescribeBeforeAndAfterCommittingOffset
+- testStreamsGroupDescribeNoErrors
+- testStreamsGroupDescribeWithErrors
 - testSubscriptionMetadataRefreshedAfterGroupIsLoaded
 - testSubscriptionMetadataRefreshedAgainAfterWriteFailure
 - testSyncGroupAsLeaderAppendFailureTransformsError
@@ -413,7 +478,8 @@ org.apache.kafka.coordinator.group.GroupMetadataManagerTest:
 - testSyncGroupSucceedWhenProtocolTypeAndNameAreNotProvided
 - testUnknownGroupId
 - testUnknownMemberIdJoinsConsumerGroup
-- testUpdateClassicGroupSizeCounter
+- testUpdateGroupSizeCounter
+- testUpdateStreamsGroupSizeCounter
 - testUpdatingSubscriptionTriggersNewTargetAssignment
 - testValidHeartbeat
 - testValidLeaveGroup
@@ -487,6 +553,11 @@ org.apache.kafka.coordinator.group.OffsetMetadataManagerTest:
 - testSimpleGroupOffsetCommit
 - testSimpleGroupOffsetCommitWithInstanceId
 - testTransactionalReplay
+org.apache.kafka.coordinator.group.ShareGroupAutoOffsetResetStrategyTest:
+- testEqualsAndHashCode
+- testFromString
+- testTimestamp
+- testValidator
 org.apache.kafka.coordinator.group.assignor.GroupSpecImplTest:
 - testIsPartitionAssigned
 - testMemberAssignment
@@ -531,13 +602,17 @@ org.apache.kafka.coordinator.group.assignor.RangeSetTest:
 - testToString
 - testUnsupportedOperations
 org.apache.kafka.coordinator.group.assignor.SimpleAssignorTest:
+- testAssignWithCurrentAssignmentHeterogeneous
+- testAssignWithCurrentAssignmentHomogeneous
 - testAssignWithEmptyMembers
 - testAssignWithNoSubscribedTopic
 - testAssignWithOneMemberNoAssignedTopicHeterogeneous
 - testAssignWithSubscribedToNonExistentTopic
 - testAssignWithThreeMembersThreeTopicsHeterogeneous
 - testAssignWithTwoMembersAndTwoTopicsHomogeneous
+- testMemberHashAssignment
 - testName
+- testRoundRobinAssignment
 org.apache.kafka.coordinator.group.assignor.UniformHeterogeneousAssignmentBuilderTest:
 - testFirstAssignmentNumMembersGreaterThanTotalNumPartitions
 - testFirstAssignmentTwoMembersTwoTopics
@@ -620,7 +695,6 @@ org.apache.kafka.coordinator.group.classic.ClassicGroupTest:
 - testValidateOffsetCommit
 - testValidateOffsetDelete
 org.apache.kafka.coordinator.group.metrics.GroupCoordinatorMetricsShardTest:
-- testConsumerGroupStateTransitionMetrics
 - testTimelineGaugeCounters
 org.apache.kafka.coordinator.group.metrics.GroupCoordinatorMetricsTest:
 - aggregateShards
@@ -684,6 +758,7 @@ org.apache.kafka.coordinator.group.modern.consumer.ConsumerGroupMemberTest:
 - testUpdateWithConsumerGroupMemberMetadataValue
 org.apache.kafka.coordinator.group.modern.consumer.ConsumerGroupTest:
 - testAddPartitionEpochs
+- testAllMembersUseClassicProtocolExcept
 - testAsDescribedGroup
 - testAsListedGroup
 - testClassicMembersSupportedProtocols
@@ -708,7 +783,6 @@ org.apache.kafka.coordinator.group.modern.consumer.ConsumerGroupTest:
 - testRemoveMember
 - testRemovePartitionEpochs
 - testRemoveStaticMember
-- testStateTransitionMetrics
 - testSubscribedRegularExpressionCount
 - testSubscriptionType
 - testUpdateAndRemoveRegularExpression
@@ -775,3 +849,255 @@ org.apache.kafka.coordinator.group.modern.share.ShareGroupTest:
 - testValidateOffsetCommit
 - testValidateOffsetDelete
 - testValidateOffsetFetch
+org.apache.kafka.coordinator.group.streams.CurrentAssignmentBuilderTest:
+- testRemainsInUnrevokedTasks
+- testStableToStable
+- testStableToStableAtTargetEpoch
+- testStableToStableWithNewTasks
+- testStableToUnreleasedTasks
+- testStableToUnreleasedTasksWithOwnedTasksNotHavingRevokedTasks
+- testStableToUnrevokedTasks
+- testStableToUnrevokedWithEmptyAssignment
+- testUnknownState
+- testUnreleasedTasksToStable
+- testUnreleasedTasksToStableWithNewTasks
+- testUnreleasedTasksToUnreleasedTasks
+- testUnreleasedTasksToUnreleasedTasksAnyActiveOwner
+- testUnreleasedTasksToUnreleasedTasksOtherUnreleasedTaskRole
+- testUnreleasedTasksToUnrevokedTasks
+- testUnrevokedTasksToStable
+- testUnrevokedTasksToUnreleasedTasks
+- testUnrevokedTasksToUnrevokedTasks
+org.apache.kafka.coordinator.group.streams.StreamsCoordinatorRecordHelpersTest:
+- testConvertToStreamsGroupTopologyRecordNullTopology
+- testNewStreamsGroupCurrentAssignmentRecord
+- testNewStreamsGroupCurrentAssignmentRecordNullGroupId
+- testNewStreamsGroupCurrentAssignmentRecordNullMember
+- testNewStreamsGroupCurrentAssignmentRecordWithEmptyAssignment
+- testNewStreamsGroupCurrentAssignmentTombstoneRecord
+- testNewStreamsGroupCurrentAssignmentTombstoneRecordNullGroupId
+- testNewStreamsGroupCurrentAssignmentTombstoneRecordNullMemberId
+- testNewStreamsGroupEpochRecord
+- testNewStreamsGroupEpochRecordNullGroupId
+- testNewStreamsGroupEpochTombstoneRecord
+- testNewStreamsGroupEpochTombstoneRecordNullGroupId
+- testNewStreamsGroupMemberRecord
+- testNewStreamsGroupMemberRecordNullGroupId
+- testNewStreamsGroupMemberRecordNullMember
+- testNewStreamsGroupMemberRecordWithNullInstanceId
+- testNewStreamsGroupMemberRecordWithNullRackId
+- testNewStreamsGroupMemberRecordWithNullUserEndpoint
+- testNewStreamsGroupMemberTombstoneRecord
+- testNewStreamsGroupMemberTombstoneRecordNullGroupId
+- testNewStreamsGroupMemberTombstoneRecordNullMemberId
+- testNewStreamsGroupPartitionMetadataRecord
+- testNewStreamsGroupPartitionMetadataRecordNullGroupId
+- testNewStreamsGroupPartitionMetadataRecordNullNewPartitionMetadata
+- testNewStreamsGroupPartitionMetadataTombstoneRecord
+- testNewStreamsGroupPartitionMetadataTombstoneRecordNullGroupId
+- testNewStreamsGroupTargetAssignmentEpochRecord
+- testNewStreamsGroupTargetAssignmentEpochRecordNullGroupId
+- testNewStreamsGroupTargetAssignmentEpochTombstoneRecord
+- testNewStreamsGroupTargetAssignmentEpochTombstoneRecordNullGroupId
+- testNewStreamsGroupTargetAssignmentRecord
+- testNewStreamsGroupTargetAssignmentRecordNullAssignment
+- testNewStreamsGroupTargetAssignmentRecordNullGroupId
+- testNewStreamsGroupTargetAssignmentRecordNullMemberId
+- testNewStreamsGroupTargetAssignmentRecordWithEmptyTaskIds
+- testNewStreamsGroupTargetAssignmentTombstoneRecord
+- testNewStreamsGroupTargetAssignmentTombstoneRecordNullGroupId
+- testNewStreamsGroupTargetAssignmentTombstoneRecordNullMemberId
+- testNewStreamsGroupTopologyRecord
+- testNewStreamsGroupTopologyRecordNullTopology
+- testNewStreamsGroupTopologyRecordNullValue
+- testNewStreamsGroupTopologyRecordTombstone
+- testNewStreamsGroupTopologyRecordTombstoneNullGroupId
+- testNewStreamsGroupTopologyRecordWithTopologyNullGroupId
+- testNewStreamsGroupTopologyRecordWithValueNullGroupId
+org.apache.kafka.coordinator.group.streams.StreamsGroupMemberTest:
+- testAsStreamsGroupDescribeMember
+- testAsStreamsGroupDescribeWithTargetAssignmentNull
+- testBuilderMaybeUpdateMember
+- testBuilderNewMember
+- testBuilderUpdateMemberEpoch
+- testBuilderUpdateWithConsumerGroupCurrentMemberAssignmentValue
+- testBuilderUpdateWithStreamsGroupMemberMetadataValue
+- testBuilderWithDefaults
+- testBuilderWithMemberIdIsNull
+- testBuilderWithMemberIsNull
+- testHasAssignedTasksChanged
+org.apache.kafka.coordinator.group.streams.StreamsGroupTest:
+- testAddTaskProcessIds
+- testAsDescribedGroup
+- testAsListedGroup
+- testComputePartitionMetadata
+- testCreateGroupTombstoneRecords
+- testDeletingMemberRemovesProcessId
+- testGetOrCreateMember
+- testGetStaticMemberByInstanceId
+- testGroupState
+- testIsInStatesCaseInsensitiveAndUnderscored
+- testIsSubscribedToTopic
+- testMetadataRefreshDeadline
+- testNoStaticMember
+- testOffsetExpirationCondition
+- testRemoveMember
+- testRemoveStaticMember
+- testRemoveTaskProcessIds
+- testSetPartitionMetadataUpdatesStateAndConfiguredTopology
+- testSetTopologyUpdatesStateAndConfiguredTopology
+- testSetTopologyUpdatesStateAndConfiguredTopologyWithPreviousCallToSetMetadata
+- testUpdateMember
+- testUpdatingMemberUpdatesProcessId
+- testUpdatingMemberUpdatesTaskProcessIdWhenPartitionIsNotReleased
+- testUpdatingMemberUpdatesTaskProcessIdWhenPartitionIsReassignedBeforeBeingRevoked
+- testValidateDeleteGroup
+- testValidateOffsetCommit
+- testValidateOffsetFetch
+- testValidateTransactionalOffsetCommit
+org.apache.kafka.coordinator.group.streams.StreamsTopologyTest:
+- fromRecordShouldCreateCorrectTopology
+- requiredTopicsShouldBeCorrect
+- subtopologiesMapShouldBeImmutable
+- subtopologiesMapShouldNotBeNull
+- topologyEpochShouldNotBeNegative
+org.apache.kafka.coordinator.group.streams.TargetAssignmentBuilderTest:
+- testAssignmentHasNotChanged
+- testAssignmentSwapped
+- testBuildEmptyAssignmentWhenTopologyNotReady
+- testCreateAssignmentMemberSpec
+- testDeleteMember
+- testEmpty
+- testNewMember
+- testPartialAssignmentUpdate
+- testReplaceStaticMember
+- testUpdateMember
+org.apache.kafka.coordinator.group.streams.TasksTupleTest:
+- testContainsAny
+- testFromTargetAssignmentRecord
+- testIsEmpty
+- testMerge
+- testReturnUnmodifiableTaskAssignments
+- testTasksCannotBeNull
+org.apache.kafka.coordinator.group.streams.TopicMetadataTest:
+- testConstructor
+- testConstructorWithEmptyName
+- testConstructorWithNegativeNumPartitions
+- testConstructorWithNullName
+- testConstructorWithNullUuid
+- testConstructorWithZeroNumPartitions
+- testConstructorWithZeroUuid
+- testFromRecord
+org.apache.kafka.coordinator.group.streams.TopologyMetadataTest:
+- testIsStateful
+- testIsStatefulThrowsExceptionWhenSubtopologyIdDoesNotExist
+- testMaxNumInputPartitions
+- testMaxNumInputPartitionsThrowsExceptionWhenSubtopologyContainsNoSourceTopics
+- testMaxNumInputPartitionsThrowsExceptionWhenSubtopologyIdDoesNotExist
+- testSubtopologies
+- testTopicMetadata
+- testTopology
+org.apache.kafka.coordinator.group.streams.assignor.GroupSpecImplTest:
+- testMembers
+org.apache.kafka.coordinator.group.streams.assignor.MockAssignorTest:
+- testBasicScenario
+- testDoubleAssignment
+- testSingleMember
+- testTwoMembersTwoSubtopologies
+- testTwoMembersTwoSubtopologiesStickiness
+- testZeroMembers
+org.apache.kafka.coordinator.group.streams.assignor.ProcessStateTest:
+- shouldAddActiveTaskToMember
+- shouldAddStandbyTaskToMember
+- shouldCompareBasedOnLoadAndCapacity
+- shouldIncreaseCapacity
+- shouldReturnAllAssignedTasks
+- shouldReturnFalseIfTaskIsNotAssigned
+- shouldReturnFalseWhenCapacityIsFull
+- shouldReturnTrueIfTaskIsAssigned
+- shouldReturnTrueWhenCapacityIsAvailable
+org.apache.kafka.coordinator.group.streams.assignor.StickyTaskAssignorTest:
+- shouldAssignActiveAndStandbyTasks
+- shouldAssignAtLeastOneTaskToEachClientIfPossible
+- shouldAssignBasedOnCapacity
+- shouldAssignBasedOnCapacityWhenMultipleClientHaveStandbyTasks
+- shouldAssignEachActiveTaskToOneClientWhenMoreClientsThanTasks
+- shouldAssignMoreTasksToClientWithMoreCapacity
+- shouldAssignMultipleReplicasOfStandbyTask
+- shouldAssignNewTasksToNewClientWhenPreviousTasksAssignedToOldClients
+- shouldAssignOneActiveTaskToEachProcessWhenTaskCountSameAsProcessCount
+- shouldAssignStandbyTasksToDifferentClientThanCorrespondingActiveTaskIsAssignedTo
+- shouldAssignTasksEvenlyWithUnequalTopicGroupSizes
+- shouldAssignTasksNotPreviouslyActiveToMultipleNewClients
+- shouldAssignTasksNotPreviouslyActiveToNewClient
+- shouldAssignTasksToClientWithPreviousStandbyTasks
+- shouldAssignTasksToNewClient
+- shouldAssignTasksToNewClientWithoutFlippingAssignmentBetweenExistingAndBouncedClients
+- shouldAssignTasksToNewClientWithoutFlippingAssignmentBetweenExistingClients
+- shouldAssignTopicGroupIdEvenlyAcrossClientsWithNoStandByTasks
+- shouldAssignTopicGroupIdEvenlyAcrossClientsWithStandByTasks
+- shouldBalanceActiveAndStandbyTasksAcrossAvailableClients
+- shouldKeepActiveTaskStickinessWhenMoreClientThanActiveTasks
+- shouldMigrateActiveTasksToNewProcessWithoutChangingAllAssignments
+- shouldMoveMinimalNumberOfTasksWhenPreviouslyAboveCapacityAndNewClientAdded
+- shouldNotAssignStandbyTaskReplicasWhenNoClientAvailableWithoutHavingTheTaskAssigned
+- shouldNotAssignStandbyTasksToClientWithPreviousStandbyTasksAndCurrentActiveTasks
+- shouldNotHaveSameAssignmentOnAnyTwoHosts
+- shouldNotHaveSameAssignmentOnAnyTwoHostsWhenThereArePreviousActiveTasks
+- shouldNotHaveSameAssignmentOnAnyTwoHostsWhenThereArePreviousStandbyTasks
+- shouldNotMigrateActiveTaskToOtherProcess
+- shouldNotMoveAnyTasksWhenNewTasksAdded
+- shouldReBalanceTasksAcrossAllClientsWhenCapacityAndTaskCountTheSame
+- shouldReBalanceTasksAcrossClientsWhenCapacityLessThanTaskCount
+- shouldRebalanceTasksToClientsBasedOnCapacity
+org.apache.kafka.coordinator.group.streams.topics.ChangelogTopicsTest:
+- shouldContainBothTypesOfPreExistingChangelogs
+- shouldContainNonSourceBasedChangelogs
+- shouldFailIfNoSourceTopics
+- shouldNotContainChangelogsForStatelessTasks
+- shouldNotContainSourceBasedChangelogs
+org.apache.kafka.coordinator.group.streams.topics.ConfiguredInternalTopicTest:
+- testAsStreamsGroupDescribeTopicInfo
+- testConstructorWithInvalidName
+- testConstructorWithNullName
+- testConstructorWithNullTopicConfigs
+- testConstructorWithZeroPartitions
+org.apache.kafka.coordinator.group.streams.topics.ConfiguredSubtopologyTest:
+- testAsStreamsGroupDescribeSubtopology
+- testConstructorWithNullRepartitionSinkTopics
+- testConstructorWithNullRepartitionSourceTopics
+- testConstructorWithNullSourceTopics
+- testConstructorWithNullStateChangelogTopics
+org.apache.kafka.coordinator.group.streams.topics.ConfiguredTopologyTest:
+- testAsStreamsGroupDescribeTopology
+- testConstructorWithInvalidTopologyEpoch
+- testConstructorWithNullInternalTopicsToBeCreated
+- testConstructorWithNullSubtopologies
+- testConstructorWithNullTopicConfigurationException
+- testIsReady
+- testNoExceptionButNoSubtopologies
+org.apache.kafka.coordinator.group.streams.topics.CopartitionedTopicsEnforcerTest:
+- shouldDeductNumberOfPartitionsFromRepartitionTopicWithEnforcedNumberOfPartitions
+- shouldEnforceCopartitioningOnRepartitionTopics
+- shouldReturnThePartitionCountsUnchangedWhenNumberOfPartitionsOfNonRepartitionTopicAndRepartitionTopicWithEnforcedNumOfPartitionsMatch
+- shouldReturnThePartitionCountsUnchangedWhenTopicInfosWithEnforcedNumOfPartitionsAreValid
+- shouldSetNumPartitionsToMaximumPartitionsWhenAllTopicsAreRepartitionTopics
+- shouldThrowAnExceptionIfTopicInfosWithEnforcedNumOfPartitionsHaveDifferentNumOfPartitions
+- shouldThrowAnExceptionWhenNumberOfPartitionsOfNonRepartitionTopicAndRepartitionTopicWithEnforcedNumOfPartitionsDoNotMatch
+- shouldThrowIllegalStateExceptionIfNoPartitionsFoundForCoPartitionedTopic
+- shouldThrowTopicConfigurationExceptionIfPartitionCountsForCoPartitionedTopicsDontMatch
+org.apache.kafka.coordinator.group.streams.topics.InternalTopicManagerTest:
+- testConfigureTopics
+- testConfigureTopicsSetsConfigurationExceptionWhenSourceTopicIsMissing
+org.apache.kafka.coordinator.group.streams.topics.RepartitionTopicsTest:
+- shouldNotSetupRepartitionTopicsWhenTopologyDoesNotContainAnyRepartitionTopics
+- shouldSetRepartitionTopicPartitionCountFromUpstreamExternalSourceTopic
+- shouldSetRepartitionTopicPartitionCountFromUpstreamInternalRepartitionSourceTopic
+- shouldSetupRepartitionTopics
+- shouldThrowIllegalStateExceptionIfMissingSourceTopics
+- shouldThrowStreamsInvalidTopologyExceptionIfPartitionCountCannotBeComputedForAllRepartitionTopicsDueToLoops
+- shouldThrowStreamsInvalidTopologyExceptionIfPartitionCountCannotBeComputedForAllRepartitionTopicsDueToMissingSinks
+org.apache.kafka.coordinator.group.streams.topics.TopicConfigurationExceptionTest:
+- testIncorrectlyPartitionedTopics
+- testMissingInternalTopics
+- testMissingSourceTopics

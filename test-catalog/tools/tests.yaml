@@ -1,3 +1,24 @@
+org.apache.kafka.tools.AclCommandTest:
+- testAclCliWithAdminAPI
+- testAclCliWithAdminAPIAndBootstrapController
+- testAclCliWithClientId
+- testAclCliWithClientIdAndBootstrapController
+- testAclCliWithMisusingBootstrapControllerToServer
+- testAclCliWithMisusingBootstrapServerToController
+- testAclsOnPrefixedResourcesWithAdminAPI
+- testAclsOnPrefixedResourcesWithAdminAPIAndBootstrapController
+- testExactlyOneAction
+- testInvalidArgs
+- testPatternTypesWithAdminAPI
+- testPatternTypesWithAdminAPIAndBootstrapController
+- testProducerConsumerCliWithAdminAPI
+- testProducerConsumerCliWithAdminAPIAndBootstrapController
+- testUseBootstrapServerOptWithBootstrapControllerOpt
+- testUseConsumerOptWithoutRequiredOpt
+- testUseIdempotentOptWithoutProducerOpt
+- testUseListPrincipalsOptWithoutListOpt
+- testUseProducerOptWithoutTopicOpt
+- testUseWithoutBootstrapServerOptAndBootstrapControllerOpt
 org.apache.kafka.tools.BrokerApiVersionsCommandTest:
 - testAdminSendNoBlock
 - testBrokerApiVersionsCommandOutput
@@ -24,6 +45,10 @@ org.apache.kafka.tools.ClusterToolTest:
 - testClusterIdWithBootstrapController
 - testClusterTooOldToHaveId
 - testLegacyModeClusterCannotUnregisterBroker
+- testListEndpointsArgumentWithBootstrapController
+- testListEndpointsArgumentWithBootstrapServer
+- testListEndpointsWithBootstrapController
+- testListEndpointsWithBootstrapServer
 - testPrintClusterId
 - testUnregister
 - testUnregisterBroker
@@ -98,8 +123,9 @@ org.apache.kafka.tools.FeatureCommandTest:
 - testHandleFeatureDependenciesForInvalidVersionFormat
 - testHandleFeatureDependenciesForMultipleFeatures
 - testHandleFeatureDependenciesForUnknownFeature
-- testHandleUpgrade
-- testHandleUpgradeDryRun
+- testHandleUpgradeToLowerVersion
+- testHandleUpgradeToLowerVersionDryRun
+- testHandleUpgradeToUnsupportedMetadataVersion
 - testHandleVersionMappingWithInvalidReleaseVersion
 - testHandleVersionMappingWithNoReleaseVersion
 - testHandleVersionMappingWithValidReleaseVersion
@@ -302,11 +328,14 @@ org.apache.kafka.tools.PushHttpMetricsReporterTest:
 org.apache.kafka.tools.ReplicaVerificationToolTest:
 - testReplicaBufferVerifyChecksum
 org.apache.kafka.tools.ResetIntegrationTest:
+- shouldAllowGroupProtocolClassic
+- shouldDefaultToClassicGroupProtocol
 - shouldNotAllowToResetWhenInputTopicAbsent
 - shouldNotAllowToResetWhenIntermediateTopicAbsent
 - shouldNotAllowToResetWhenSpecifiedInternalTopicDoesNotExist
 - shouldNotAllowToResetWhenSpecifiedInternalTopicIsNotInternal
 - shouldNotAllowToResetWhileStreamsIsRunning
+- shouldOverwriteGroupProtocolOtherThanClassic
 - testReprocessingByDurationAfterResetWithoutIntermediateUserTopic
 - testReprocessingFromDateTimeAfterResetWithoutIntermediateUserTopic
 - testReprocessingFromFileAfterResetWithoutIntermediateUserTopic
@@ -320,6 +349,12 @@ org.apache.kafka.tools.ResetIntegrationWithSslTest:
 - testReprocessingFromScratchAfterResetWithIntermediateUserTopic
 - testReprocessingFromScratchAfterResetWithoutIntermediateUserTopic
 - testResetWhenInternalTopicsAreSpecified
+org.apache.kafka.tools.ShareConsumerPerformanceTest:
+- testClientIdOverride
+- testConfigBootStrapServer
+- testConfigWithUnrecognizedOption
+- testDefaultClientId
+- testHeaderMatchBody
 org.apache.kafka.tools.StreamsResetterTest:
 - shouldDeleteTopic
 - shouldDetermineInternalTopicBasedOnTopicName1
@@ -515,11 +550,14 @@ org.apache.kafka.tools.consumer.group.DeleteOffsetsConsumerGroupCommandIntegrati
 - testDeleteOffsetsOfStableConsumerGroupWithUnknownTopicPartition
 org.apache.kafka.tools.consumer.group.DescribeConsumerGroupTest:
 - testDescribeAllExistingGroups
-- testDescribeExistingGroup
 - testDescribeExistingGroupWithNoMembers
 - testDescribeExistingGroups
+- testDescribeGroupMemberWithMigration
+- testDescribeGroupMembers
 - testDescribeGroupMembersWithShortInitializationTimeout
+- testDescribeGroupOffsets
 - testDescribeGroupOffsetsWithShortInitializationTimeout
+- testDescribeGroupState
 - testDescribeGroupStateWithShortInitializationTimeout
 - testDescribeGroupWithShortInitializationTimeout
 - testDescribeMembersOfExistingGroup
@@ -588,8 +626,22 @@ org.apache.kafka.tools.consumer.group.SaslClientsWithInvalidCredentialsTest:
 - testConsumerGroupServiceWithAuthenticationFailure
 - testConsumerGroupServiceWithAuthenticationSuccess
 org.apache.kafka.tools.consumer.group.ShareGroupCommandTest:
-- testDescribeShareGroups
-- testDescribeShareGroupsGetOffsets
+- testDeleteShareGroupsAllGroupsPartialFail
+- testDeleteShareGroupsAllGroupsSuccess
+- testDeleteShareGroupsArgs
+- testDeleteShareGroupsDeleteFailure
+- testDeleteShareGroupsFailureNonEmptyGroup
+- testDeleteShareGroupsFailureNonShareGroup
+- testDeleteShareGroupsPartialFailure
+- testDeleteShareGroupsSuccess
+- testDescribeMembersOfAllExistingGroups
+- testDescribeMembersOfExistingGroup
+- testDescribeNonexistentGroup
+- testDescribeOffsetsOfAllExistingGroups
+- testDescribeOffsetsOfExistingGroup
+- testDescribeOffsetsOfExistingGroupWithNulls
+- testDescribeStateOfExistingGroup
+- testDescribeStatesOfAllExistingGroups
 - testGroupStatesFromString
 - testListShareGroups
 - testListShareGroupsWithStates
@@ -641,8 +693,6 @@ org.apache.kafka.tools.reassign.ReassignPartitionsCommandTest:
 - testLogDirReassignment
 - testProduceAndConsumeWithReassignmentInProgress
 - testReassignment
-- testReassignmentCompletionDuringPartialUpgrade
-- testReassignmentWithAlterPartitionDisabled
 - testThrottledReassignment
 org.apache.kafka.tools.reassign.ReassignPartitionsUnitTest:
 - testAlterReplicaLogDirs
